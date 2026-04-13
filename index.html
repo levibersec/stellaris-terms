@@ -2,86 +2,427 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Termos de Serviço — Stellaris Bot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Termos de Serviço — KIMI Bot</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-body{
-    font-family: Arial, sans-serif;
-    background:#0f1117;
-    color:#e6e6e6;
-    max-width:900px;
-    margin:auto;
-    padding:40px;
-    line-height:1.6;
-}
-h1,h2{color:#ff69b4;}
-.box{
-    background:#161b22;
-    padding:25px;
-    border-radius:10px;
-}
-a{color:#00bfff;}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #08A94B;
+    --green-dim: rgba(8,169,75,0.12);
+    --green-glow: rgba(8,169,75,0.35);
+    --black: #0B0B0B;
+    --white: #FFFFFF;
+    --gray: rgba(255,255,255,0.55);
+    --border: rgba(8,169,75,0.25);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(8,169,75,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,169,75,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 700px;
+    height: 500px;
+    background: radial-gradient(ellipse, rgba(8,169,75,0.13) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 60px 32px 100px;
+  }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 48px;
+    margin-bottom: 64px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green-dim);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    animation: fadein 0.6s ease both;
+  }
+
+  .badge::before {
+    content: '';
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green-glow);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    animation: fadein 0.7s 0.1s ease both;
+  }
+
+  h1 span { color: var(--green); }
+
+  .tagline {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--gray);
+    margin-top: 20px;
+    letter-spacing: 0.06em;
+    animation: fadein 0.7s 0.2s ease both;
+  }
+
+  .tagline em { color: var(--green); font-style: normal; }
+
+  .meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    margin-top: 12px;
+    animation: fadein 0.7s 0.3s ease both;
+  }
+
+  .sections {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .section {
+    border: 1px solid transparent;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.25s;
+    animation: fadein 0.5s ease both;
+  }
+
+  .section:hover { border-color: var(--border); }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 22px 28px;
+    cursor: pointer;
+    user-select: none;
+    background: rgba(255,255,255,0.02);
+    transition: background 0.2s;
+  }
+
+  .section-header:hover { background: var(--green-dim); }
+
+  .num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    min-width: 28px;
+    letter-spacing: 0.05em;
+  }
+
+  .section-header h2 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    flex: 1;
+    letter-spacing: 0.01em;
+  }
+
+  .chevron {
+    width: 18px; height: 18px;
+    color: var(--gray);
+    transition: transform 0.3s ease, color 0.2s;
+    flex-shrink: 0;
+  }
+
+  .section.open .chevron { transform: rotate(180deg); color: var(--green); }
+
+  .section-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .section.open .section-body { max-height: 600px; }
+
+  .section-body-inner {
+    padding: 0 28px 28px 72px;
+    font-size: 14.5px;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.72);
+  }
+
+  .section-body-inner ul { list-style: none; margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+
+  .section-body-inner ul li { display: flex; align-items: flex-start; gap: 10px; }
+
+  .section-body-inner ul li::before {
+    content: '→';
+    color: var(--green);
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .highlight {
+    background: var(--green-dim);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--green);
+    line-height: 1.6;
+  }
+
+  footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    animation: fadein 0.7s 0.5s ease both;
+  }
+
+  .footer-logo { font-size: 20px; font-weight: 800; letter-spacing: -0.03em; }
+  .footer-logo span { color: var(--green); }
+
+  .footer-right {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    text-align: right;
+    line-height: 1.8;
+  }
+
+  .section + .section { border-top: 1px solid rgba(8,169,75,0.06); }
+
+  @keyframes fadein {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section:nth-child(1) { animation-delay: 0.1s; }
+  .section:nth-child(2) { animation-delay: 0.15s; }
+  .section:nth-child(3) { animation-delay: 0.2s; }
+  .section:nth-child(4) { animation-delay: 0.25s; }
+  .section:nth-child(5) { animation-delay: 0.3s; }
+  .section:nth-child(6) { animation-delay: 0.35s; }
+  .section:nth-child(7) { animation-delay: 0.4s; }
+  .section:nth-child(8) { animation-delay: 0.45s; }
+
+  @media (max-width: 600px) {
+    .wrap { padding: 40px 20px 80px; }
+    .section-body-inner { padding-left: 40px; }
+    footer { flex-direction: column; align-items: flex-start; }
+    .footer-right { text-align: left; }
+  }
 </style>
 </head>
-
 <body>
-<div class="box">
+<div class="wrap">
 
-<h1>Termos de Serviço — Stellaris Bot</h1>
-<p>Última atualização: 2026</p>
+  <header>
+    <div class="badge">Documento oficial · KIMI Bot</div>
+    <h1>Termos de<br><span>Serviço</span></h1>
+    <p class="tagline">Não é magia. É <em>KIMI.</em></p>
+    <p class="meta">// Última atualização: 2026</p>
+  </header>
 
-<h2>1. Aceitação dos Termos</h2>
-<p>
-Ao utilizar o Stellaris Bot em qualquer servidor Discord, você concorda com estes Termos de Serviço.
-Caso não concorde, não utilize o bot.
-</p>
+  <div class="sections">
 
-<h2>2. Funcionalidade</h2>
-<p>
-O bot oferece sistemas de economia, recompensas por mensagens,
-tempo em chamadas de voz, rankings e loja virtual de cargos.
-</p>
+    <div class="section open">
+      <div class="section-header" onclick="toggle(this)">
+        <span class="num">01</span>
+        <h2>Aceitação dos Termos</h2>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="section-body">
+        <div class="section-body-inner">
+          Ao utilizar o KIMI Bot em qualquer servidor Discord, você concorda automaticamente com estes Termos de Serviço. Caso não concorde com alguma cláusula, o uso do bot deve ser descontinuado imediatamente.
+          <div class="highlight">⚠ O uso contínuo equivale à aceitação total dos termos vigentes.</div>
+        </div>
+      </div>
+    </div>
 
-<h2>3. Coleta de Dados</h2>
-<p>
-O bot armazena apenas dados necessários para funcionamento:
-</p>
-<ul>
-<li>ID do usuário do Discord</li>
-<li>Quantidade de mensagens</li>
-<li>Tempo em canais de voz</li>
-<li>Moedas e estrelas do sistema interno</li>
-</ul>
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <span class="num">02</span>
+        <h2>Elegibilidade</h2>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="section-body">
+        <div class="section-body-inner">
+          O uso do KIMI Bot está condicionado ao cumprimento dos Termos de Serviço do Discord. Usuários menores de 13 anos não estão autorizados a utilizar o bot, conforme as diretrizes da plataforma.
+        </div>
+      </div>
+    </div>
 
-<p>Nenhuma informação pessoal fora do Discord é coletada.</p>
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <span class="num">03</span>
+        <h2>Coleta de Dados</h2>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="section-body">
+        <div class="section-body-inner">
+          O bot armazena apenas os dados estritamente necessários para o seu funcionamento:
+          <ul>
+            <li>IDs de usuários e servidores</li>
+            <li>Dados de economia, XP e progressão</li>
+            <li>Configurações personalizadas por servidor</li>
+            <li>Registros de tickets e logs de moderação</li>
+          </ul>
+          <div class="highlight">✓ Nenhuma informação pessoal fora do ecossistema Discord é coletada ou armazenada.</div>
+        </div>
+      </div>
+    </div>
 
-<h2>4. Uso Indevido</h2>
-<p>
-É proibido explorar bugs, manipular sistemas ou tentar abusar das mecânicas
-econômicas do bot. Usuários podem perder benefícios ou acesso.
-</p>
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <span class="num">04</span>
+        <h2>Uso Indevido</h2>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="section-body">
+        <div class="section-body-inner">
+          As seguintes práticas são estritamente proibidas:
+          <ul>
+            <li>Explorar bugs ou vulnerabilidades do sistema</li>
+            <li>Manipular mecânicas de economia ou XP</li>
+            <li>Tentar contornar sistemas de moderação</li>
+            <li>Uso automatizado não autorizado (self-bots)</li>
+          </ul>
+          Violações podem resultar em perda de benefícios, dados ou bloqueio permanente.
+        </div>
+      </div>
+    </div>
 
-<h2>5. Disponibilidade</h2>
-<p>
-O bot pode ser modificado, pausado ou encerrado a qualquer momento sem aviso prévio.
-</p>
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <span class="num">05</span>
+        <h2>Disponibilidade</h2>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="section-body">
+        <div class="section-body-inner">
+          O KIMI Bot pode ser modificado, pausado ou encerrado a qualquer momento, sem aviso prévio. Nos esforçamos para manter alta disponibilidade, porém não garantimos operação ininterrupta.
+        </div>
+      </div>
+    </div>
 
-<h2>6. Limitação de Responsabilidade</h2>
-<p>
-O desenvolvedor não se responsabiliza por perdas virtuais,
-reset de dados ou mudanças no sistema.
-</p>
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <span class="num">06</span>
+        <h2>Limitação de Responsabilidade</h2>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="section-body">
+        <div class="section-body-inner">
+          O desenvolvedor não se responsabiliza por:
+          <ul>
+            <li>Perdas de itens ou moedas virtuais</li>
+            <li>Reset ou perda de dados por manutenção</li>
+            <li>Mudanças em funcionalidades do sistema</li>
+            <li>Interrupções causadas pela plataforma Discord</li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-<h2>7. Alterações</h2>
-<p>
-Os termos podem ser atualizados a qualquer momento.
-O uso contínuo do bot implica aceitação das alterações.
-</p>
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <span class="num">07</span>
+        <h2>Alterações nos Termos</h2>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="section-body">
+        <div class="section-body-inner">
+          Estes termos podem ser atualizados a qualquer momento. O uso contínuo do bot após modificações implica na aceitação das novas condições. Recomendamos revisitar este documento periodicamente.
+        </div>
+      </div>
+    </div>
 
-<h2>8. Contato</h2>
-<p>
-Para suporte ou dúvidas, entre em contato pelo servidor oficial do Discord.
-</p>
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <span class="num">08</span>
+        <h2>Contato e Suporte</h2>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="section-body">
+        <div class="section-body-inner">
+          Para suporte, dúvidas ou relatório de problemas, entre em contato pelo servidor oficial do Discord. Nossa equipe está disponível para ajudar.
+          <div class="highlight">→ Acesse o servidor oficial para abrir um ticket de suporte.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-logo">KI<span>MI</span></div>
+    <div class="footer-right">
+      Não é magia. É KIMI.<br>
+      © 2026 · Todos os direitos reservados
+    </div>
+  </footer>
 
 </div>
+
+<script>
+  function toggle(header) {
+    const section = header.parentElement;
+    section.classList.toggle('open');
+  }
+</script>
 </body>
 </html>
