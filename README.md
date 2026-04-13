@@ -1,1 +1,1 @@
-# stellaris-terms
+# KIMI BOT
